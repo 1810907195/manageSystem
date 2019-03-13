@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{commons/include::include}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>用户管理</title>
+    <!-- jqgrid-->
+    <link href="css/plugins/jqgrid/ui.jqgrid.css" th:href="@{/css/plugins/jqgrid/ui.jqgrid.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/dist/css/AdminLTE.min.css}" href="css/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" th:href="@{/css/dist/css/skins/_all-skins.min.css}" href="css/dist/css/skins/_all-skins.min.css">
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <!--[if lt IE 8]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>自助终端</h5>
+                </div>
+                <div class="ibox-content">
+                    <!--按钮区 -->
+                    <!-- 挂号 -->
+                    <div class="jqGrid_wrapper">
+                        <!-- 自助机日志表格-->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5>用户管理</h5>
+                                        <div class="ibox-tools">
+                                            <a class="collapse-link">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <i class="fa fa-wrench"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-user">
+                                                <li><a href="#">选项 01</a>
+                                                </li>
+                                                <li><a href="#">选项 02</a>
+                                                </li>
+                                            </ul>
+                                            <a class="close-link">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- ===================按钮区================= -->
+                                    <div class="row">
+                                        <div class="col-sm-3 m-b-xs">
+                                            <div data-toggle="buttons" class="btn-group">
+                                                <!-- 按钮区 -->
+                                                <button type="button" class="btn btn-outline btn-danger permission_add" data-toggle="modal" data-target="#add_perssion">
+                                                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline btn-info user_btn" data-toggle="modal" data-target="#edit_perssion">
+                                                    <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline btn-danger permission_delete" data-toggle="tooltip" data-placement="bottom" title="删除">
+                                                    <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                                                </button>
+                                                <!-- 导出当前数据(按条件查询)-->
+                                                <button type="button" class="btn btn-outline btn-info importCurrent" data-toggle="tooltip" data-placement="bottom" title="导出当前">
+                                                    <i class="glyphicon glyphicon glyphicon-download" aria-hidden="true"></i>
+                                                </button>
+                                                <!-- 导出全部 数据-->
+                                                <button type="button" class="btn btn-outline btn-danger importAll" data-toggle="tooltip" data-placement="bottom" title="导出全部">
+                                                    <i class="glyphicon glyphicon glyphicon-download-alt" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <select id="search_state" class="input-sm form-control input-s-sm">
+                                                    <option value="">不限</option>
+                                                    <option value="0">初始化</option>
+                                                    <option value="1">银行失败</option>
+                                                    <option value="2">银行缴费成功,HIS确认成功</option>
+                                                    <option value="3">HIS确认失败</option>
+                                                    <option value="4">HIS确认失败,被冲销</option>
+                                                    <option value="5">HIS确认失败,冲销失败</option>
+                                                    <option value="6">HIS确认初始化</option>
+                                                    <option value="7">用户主动冲销</option>
+                                                </select><span class="input-group-btn">
+			                                        <button type="button" class="btn btn-sm btn-primary likeSerch">状态查询</button></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <input id="search_kh" type="text" placeholder="请输入关键词" class="input-sm form-control"> <span class="input-group-btn">
+			                                        <button type="button" class="btn btn-sm btn-primary likeSerch">卡号查询</button> </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <select id="search_klx000" class="input-sm form-control input-s-sm">
+                                                    <option value="">不限</option>
+                                                    <option value="1">院内就诊卡</option>
+                                                    <option value="3">身份证</option>
+                                                    <option value="4">银行卡</option>
+                                                    <option value="5">市医保卡</option>
+                                                    <option value="6">居民健康卡</option>
+                                                    <option value="11">新农合卡</option>
+                                                </select><span class="input-group-btn">
+			                                        <button type="button" class="btn btn-sm btn-primary likeSerch">卡类型</button></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <input id="search_yhkh00" type="text" placeholder="请输入关键词" class="input-sm form-control"> <span class="input-group-btn">
+			                                        <button type="button" class="btn btn-sm btn-primary likeSerch">银行卡号</button> </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <input id="search_xtgzh0" type="text" placeholder="请输入关键词" class="input-sm form-control"> <span class="input-group-btn">
+			                                        <button type="button" class="btn btn-sm btn-primary likeSerch">系统跟踪号</button> </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group date">
+                                                <input id="search_starttime" type="text" placeholder="请输入开始时间" class="input-sm form-control"><span class="input-group-btn">
+			                                        <button type="button" class="btn btn-sm btn-primary likeSerch date">开始时间</button></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group date">
+                                                <input id="search_endtime" type="text" placeholder="请输入截止时间" class="input-sm form-control"><span class="input-group-btn">
+			                                        <button type="button" class="btn btn-sm btn-primary likeSerch date">截止时间</button></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <!-- ==================================== -->
+                                    <div class="ibox-content">
+                                        <table id="table_list_archives"></table>
+                                        <div id="pager_list_archives"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 挂号扇形统计图 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ========================modal窗口==================================================== -->
+    <!-- 添加功能方法 -->
+    <div class="modal permissionAdd_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">添加</h3>
+                </div>
+                <div class="modal-body">
+                    <form role="form" id="form2">
+                        <div class="form-group has-error">
+                            <label for="group_id" >Role</label>
+                            <select id="group_id" class="input-sm form-control input-s-sm inline">
+                                <option value="1">管理员</option>
+                                <option value="2">研发部</option>
+                                <option value="3">财务部</option>
+                                <option value="4">市场部</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="action_name">Perssion Name</label>
+                            <input type="text" class="form-control" id="action_name" placeholder="Enter Perssion Name" check-type="required" required-message="请填写你的权限名">
+                        </div>
+                        <div class="form-group">
+                            <label for="url">Url</label>
+                            <input type="text" class="form-control" id="url" placeholder="Enter Url" check-type="required" required-message="请填写你的权限访问路径">
+                        </div>
+                        <div class="form-group">
+                            <label for="status" >Status</label>
+                            <select id="status" class="input-sm form-control input-s-sm inline">
+                                <option value="0">未激活</option>
+                                <option value="1">激活</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="parent_id" >Parent ID</label>
+                            <input type="text" class="form-control" id="parent_id" placeholder="Enter Parent ID"  required-message="请填写你的父节点">
+                        </div>
+                        <div class="form-group">
+                            <label for="menu_type" >Menu Type</label>
+                            <input type="text" class="form-control" id="menu_type" placeholder="Enter Menu Type"  required-message="请填写你的菜单类型">
+                        </div>
+                        <div class="form-group">
+                            <label for="menu_order" >Menu Order</label>
+                            <input type="text" class="form-control" id="menu_order" placeholder="Enter Menu Order"  required-message="请填写你的菜单顺序">
+                        </div>
+                        <button type="reset"  class="btn btn-success btn-sm">重置</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btn-sm alert_add_perssion" data-dismiss="modal">提交</button>
+                    <button class="btn btn-success btn-sm" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 编辑功能方法 -->
+    <div class="modal permissionEdit_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">编辑</h3>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="edit_status" >Status</label>
+                            <select id="edit_status" class="input-sm form-control input-s-sm inline">
+                                <option value="未激活">未激活</option>
+                                <option value="激活">激活</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btn-sm edit_perssion" data-dismiss="modal">提交</button>
+                    <button class="btn btn-success btn-sm" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 全局js -->
+<!-- Peity -->
+<script th:src="@{}" src="js/plugins/peity/jquery.peity.min.js"></script>
+<!-- jqGrid -->
+<script th:src="@{}" src="js/plugins/jqgrid/i18n/grid.locale-cn.js"></script>
+<script th:src="@{}" src="js/plugins/jqgrid/jquery.jqGrid.min.js"></script>
+
+<!-- 自定义js -->
+<script th:src="@{/js/content.js}" src="js/content.js?v=1.0.0"></script>
+
+<script th:src="@{/js/bootstrap/js/moment.min.js}" src="js/bootstrap/js/moment.min.js"></script>
+<!-- 日历 layer-->
+<script th:src="@{/js/layer/laydate.js}" src="js/layer/laydate.js"></script>
+
+<script th:src="@{/js/plugins/slimscroll/jquery.slimscroll.min.js}" src="js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script th:src="@{/js/plugins/fastclick/fastclick.js}" src="js/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script th:src="@{/js/dist/js/demo.js}" src="js/dist/js/demo.js"></script>
+<!-- jQuery Knob -->
+<script th:src="@{/js/plugins/knob/jquery.knob.js}" src="js/plugins/knob/jquery.knob.js"></script>
+<!-- Sparkline -->
+<script src="js/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+<script type="text/javascript">
+    //中文日历
+    laydate.render({
+        elem: '#search_starttime',
+        istoday: true,
+        type: 'datetime',
+        format: 'yyyy-MM-dd',
+    });
+    laydate.render({
+        elem: '#search_endtime',
+        istoday: true,
+        type: 'datetime',
+        format: 'yyyy-MM-dd',
+    });
+</script>
+<!-- 挂号 -->
+<script src="js/business/bankCardTradeInfo.js"></script>
+</body>
+</html>

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{commons/include::include}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <title>用户管理</title>
+    <!-- jqgrid-->
+    <link href="css/plugins/jqgrid/ui.jqgrid.css" th:href="@{/css/plugins/jqgrid/ui.jqgrid.css}" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/dist/css/AdminLTE.min.css}" href="css/dist/css/AdminLTE.min.css">
+    <link rel="stylesheet" th:href="@{/css/dist/css/skins/_all-skins.min.css}" href="css/dist/css/skins/_all-skins.min.css">
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <!--[if lt IE 8]>
+    <meta http-equiv="refresh" content="0;ie.html" />
+    <![endif]-->
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox">
+                <div class="ibox-title">
+                    <h5>自助终端</h5>
+                </div>
+                <div class="ibox-content">
+                    <!--按钮区 -->
+                    <!-- 挂号 -->
+                    <div class="jqGrid_wrapper">
+                        <!-- 自助机日志表格-->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5>用户管理</h5>
+                                        <div class="ibox-tools">
+                                            <a class="collapse-link">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <i class="fa fa-wrench"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-user">
+                                                <li><a href="#">选项 01</a>
+                                                </li>
+                                                <li><a href="#">选项 02</a>
+                                                </li>
+                                            </ul>
+                                            <a class="close-link">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <!-- ===================按钮区================= -->
+                                    <div class="row">
+                                        <div class="col-sm-3 m-b-xs">
+                                            <div data-toggle="buttons" class="btn-group">
+                                                <!-- 按钮区 -->
+                                                <button type="button" class="btn btn-outline btn-danger permission_add" data-toggle="modal" data-target="#add_perssion">
+                                                    <i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline btn-info user_btn" data-toggle="modal" data-target="#edit_perssion">
+                                                    <i class="glyphicon glyphicon-pencil" aria-hidden="true"></i>
+                                                </button>
+                                                <button type="button" class="btn btn-outline btn-danger permission_delete" data-toggle="tooltip" data-placement="bottom" title="删除">
+                                                    <i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+                                                </button>
+                                                <!-- 导出当前数据(按条件查询)-->
+                                                <button type="button" class="btn btn-outline btn-info importCurrent" data-toggle="tooltip" data-placement="bottom" title="导出当前">
+                                                    <i class="glyphicon glyphicon glyphicon-download" aria-hidden="true"></i>
+                                                </button>
+                                                <!-- 导出全部 数据-->
+                                                <button type="button" class="btn btn-outline btn-danger importAll" data-toggle="tooltip" data-placement="bottom" title="导出全部">
+                                                    <i class="glyphicon glyphicon glyphicon-download-alt" aria-hidden="true"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <select id="search_state" class="input-sm form-control input-s-sm">
+                                                    <option value="">不限</option>
+                                                    <option value="0">初始化</option>
+                                                    <option value="1">银行失败</option>
+                                                    <option value="2">银行缴费成功,HIS确认成功</option>
+                                                    <option value="3">HIS确认失败</option>
+                                                    <option value="4">HIS确认失败,被冲销</option>
+                                                    <option value="5">HIS确认失败,冲销失败</option>
+                                                    <option value="6">HIS确认初始化</option>
+                                                    <option value="7">用户主动冲销</option>
+                                                </select><span class="input-group-btn">
+			                                        <button type="button" class="btn btn-sm btn-primary likeSerch">状态查询</button></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <input id="search_kh" type="text" placeholder="请输入关键词" class="input-sm form-control"> <span class="input-group-btn">
+			                                        <button type="button" class="btn btn-sm btn-primary likeSerch">卡号查询</button> </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <select id="search_klx000" class="input-sm form-control input-s-sm">
+                                                    <option value="">不限</option>
+                                                    <option value="1">院内就诊卡</option>
+                                                    <option value="3">身份证</option>
+                                                    <option value="4">银行卡</option>
+                                                    <option value="5">市医保卡</option>
+                                                    <option value="6">居民健康卡</option>
+                                                    <option value="11">新农合卡</option>
+                                                </select><span class="input-group-btn">
+			                                        <button type="button" class="btn btn-sm btn-primary likeSerch">卡类型</button></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <input id="search_yhkh00" type="text" placeholder="请输入关键词" class="input-sm form-control"> <span class="input-group-btn">
+			                                        <button type="button" class="btn btn-sm btn-primary likeSerch">银行卡号</button> </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group">
+                                                <input id="search_xtgzh0" type="text" placeholder="请输入关键词" class="input-sm form-control"> <span class="input-group-btn">
+			                                        <button type="button" class="btn btn-sm btn-primary likeSerch">系统跟踪号</button> </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group date">
+                                                <input id="search_starttime" type="text" placeholder="请输入开始时间" class="input-sm form-control"><span class="input-group-btn">
+			                                        <button type="button" class="btn btn-sm btn-primary likeSerch date">开始时间</button></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-3">
+                                            <div class="input-group date">
+                                                <input id="search_endtime" type="text" placeholder="请输入截止时间" class="input-sm form-control"><span class="input-group-btn">
+			                                        <button type="button" class="btn btn-sm btn-primary likeSerch date">截止时间</button></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <!-- ==================================== -->
+                                    <div class="ibox-content">
+                                        <table id="table_list_archives"></table>
+                                        <div id="pager_list_archives"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 挂号折线统计图 -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5>自助机折线图</h5>
+                                        <div class="ibox-tools">
+                                            <a class="collapse-link">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <i class="fa fa-wrench"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-user">
+                                                <li><a href="#">选项 01</a>
+                                                </li>
+                                                <li><a href="#">选项 02</a>
+                                                </li>
+                                            </ul>
+                                            <a class="close-link">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <div class="row">
+                                            <div id="main" class="col-sm-12 col-xs-12 col-md-12" style="height:600px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 挂号扇形统计图 -->
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="ibox float-e-margins">
+                                    <div class="ibox-title">
+                                        <h5>自助机当月挂号统计</h5>
+                                        <div class="ibox-tools">
+                                            <a class="collapse-link">
+                                                <i class="fa fa-chevron-up"></i>
+                                            </a>
+                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <i class="fa fa-wrench"></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-user">
+                                                <li><a href="#">选项 01</a>
+                                                </li>
+                                                <li><a href="#">选项 02</a>
+                                                </li>
+                                            </ul>
+                                            <a class="close-link">
+                                                <i class="fa fa-times"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="ibox-content">
+                                        <div class="row">
+                                            <div class="col-xs-6 col-md-3 text-center">
+                                                <input type="text" id="total_gh" class="knob" value="80" data-width="150" data-height="150" data-fgColor="#3c8dbc" data-readonly="true">
+                                                <div class="knob-label">总挂号人数</div>
+                                            </div>
+                                            <div class="col-xs-6 col-md-3 text-center">
+                                                <input type="text" id="total_sfz_gh" class="knob" value="18" data-width="120" data-height="120" data-fgColor="#f56954">
+                                                <div class="knob-label">自费挂号</div>
+                                            </div>
+                                            <div class="col-xs-6 col-md-3 text-center">
+                                                <input type="text" id="total_yb_gh" class="knob" value="22" data-thickness="0.3" data-width="120" data-height="120" data-fgColor="#00a65a">
+                                                <div class="knob-label">医保挂号</div>
+                                            </div>
+                                            <div class="col-xs-6 col-md-3 text-center">
+                                                <input type="text" id="total_xnh_gh" class="knob" data-thickness="0.2" data-angleArc="250" data-angleOffset="-125" value="40" data-width="120" data-height="120" data-fgColor="#00c0ef">
+                                                <div class="knob-label">新农合挂号</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ========================modal窗口==================================================== -->
+    <!-- 添加功能方法 -->
+    <div class="modal permissionAdd_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">添加</h3>
+                </div>
+                <div class="modal-body">
+                    <form role="form" id="form2">
+                        <div class="form-group has-error">
+                            <label for="group_id" >Role</label>
+                            <select id="group_id" class="input-sm form-control input-s-sm inline">
+                                <option value="1">管理员</option>
+                                <option value="2">研发部</option>
+                                <option value="3">财务部</option>
+                                <option value="4">市场部</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="action_name">Perssion Name</label>
+                            <input type="text" class="form-control" id="action_name" placeholder="Enter Perssion Name" check-type="required" required-message="请填写你的权限名">
+                        </div>
+                        <div class="form-group">
+                            <label for="url">Url</label>
+                            <input type="text" class="form-control" id="url" placeholder="Enter Url" check-type="required" required-message="请填写你的权限访问路径">
+                        </div>
+                        <div class="form-group">
+                            <label for="status" >Status</label>
+                            <select id="status" class="input-sm form-control input-s-sm inline">
+                                <option value="0">未激活</option>
+                                <option value="1">激活</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="parent_id" >Parent ID</label>
+                            <input type="text" class="form-control" id="parent_id" placeholder="Enter Parent ID"  required-message="请填写你的父节点">
+                        </div>
+                        <div class="form-group">
+                            <label for="menu_type" >Menu Type</label>
+                            <input type="text" class="form-control" id="menu_type" placeholder="Enter Menu Type"  required-message="请填写你的菜单类型">
+                        </div>
+                        <div class="form-group">
+                            <label for="menu_order" >Menu Order</label>
+                            <input type="text" class="form-control" id="menu_order" placeholder="Enter Menu Order"  required-message="请填写你的菜单顺序">
+                        </div>
+                        <button type="reset"  class="btn btn-success btn-sm">重置</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btn-sm alert_add_perssion" data-dismiss="modal">提交</button>
+                    <button class="btn btn-success btn-sm" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 编辑功能方法 -->
+    <div class="modal permissionEdit_modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">编辑</h3>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="edit_action_id" >序号</label>
+                            <input type="text" class="form-control" id="edit_xh" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_group_id" >卡号</label>
+                            <input type="text" class="form-control" id="edit_kh" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_action_name">银行卡号</label>
+                            <input type="text" class="form-control" id="edit_yhkh" placeholder="Enter Perssion Name" check-type="required" required-message="请填写你的权限名">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_status" >Status</label>
+                            <select id="edit_status" class="input-sm form-control input-s-sm inline">
+                                <option value="未激活">未激活</option>
+                                <option value="激活">激活</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btn-sm edit_perssion" data-dismiss="modal">提交</button>
+                    <button class="btn btn-success btn-sm" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 全局js -->
+
+<!-- Peity -->
+<script src="${GZPath}js/plugins/peity/jquery.peity.min.js"></script>
+
+<!-- jqGrid -->
+<script src="${GZPath}js/plugins/jqgrid/i18n/grid.locale-cn.js"></script>
+<script src="${GZPath}js/plugins/jqgrid/jquery.jqGrid.min.js"></script>
+
+<!-- 自定义js -->
+<script src="${GZPath}js/content.js?v=1.0.0"></script>
+
+<script src="${GZPath}js/bootstrap/js/moment.min.js"></script>
+<!-- 英文日历 bootstrap-->
+<%-- <script src="${GZPath}js/bootstrap/js/bootstrap-datetimepicker.min.js"></script> --%>
+<!-- 日历 layer-->
+<script src="${GZPath }js/layer/laydate.js"></script>
+
+<script src="${GZPath}js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<script src="${GZPath}js/plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="${GZPath}js/dist/js/demo.js"></script>
+
+<!-- jQuery Knob -->
+<script src="${GZPath}js/plugins/knob/jquery.knob.js"></script>
+<!-- Sparkline -->
+<script src="${GZPath}js/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+<script type="text/javascript">
+    //中文日历
+    laydate.render({
+        elem: '#search_starttime',
+        istoday: true,
+        type: 'datetime',
+        format: 'yyyy-MM-dd',
+    });
+    laydate.render({
+        elem: '#search_endtime',
+        istoday: true,
+        type: 'datetime',
+        format: 'yyyy-MM-dd',
+    });
+    //英文日历
+    /*   $('#search_starttime').datetimepicker({
+             format: 'YYYY-MM-DD HH:mm:ss',
+             locale: moment.locale('zh-cn')
+         });
+      $('#search_endtime').datetimepicker({
+             format: 'YYYY-MM-DD HH:mm:ss',
+             locale: moment.locale('zh-cn')
+         }); */
+</script>
+<!-- 挂号 -->
+<script src="${GZPath}js/business/bankCardTradeInfo.js"></script>
+<!-- 折线 -->
+<script src="${GZPath}js/dist/echarts.min.js"></script>
+<script src="${GZPath}js/business/echarts.js"></script>
+<!-- 扇形 -->
+<script src="${GZPath}js/business/sector.js"></script>
+<script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+<!--统计代码，可删除-->
+<script>
+    $(function () {
+        /* jQueryKnob */
+
+        $(".knob").knob({
+            /*change : function (value) {
+             //console.log("change : " + value);
+             },
+             release : function (value) {
+             console.log("release : " + value);
+             },
+             cancel : function () {
+             console.log("cancel : " + this.value);
+             },*/
+            draw: function () {
+
+                // "tron" case
+                if (this.$.data('skin') == 'tron') {
+
+                    var a = this.angle(this.cv)  // Angle
+                        , sa = this.startAngle          // Previous start angle
+                        , sat = this.startAngle         // Start angle
+                        , ea                            // Previous end angle
+                        , eat = sat + a                 // End angle
+                        , r = true;
+
+                    this.g.lineWidth = this.lineWidth;
+
+                    this.o.cursor
+                    && (sat = eat - 0.3)
+                    && (eat = eat + 0.3);
+
+                    if (this.o.displayPrevious) {
+                        ea = this.startAngle + this.angle(this.value);
+                        this.o.cursor
+                        && (sa = ea - 0.3)
+                        && (ea = ea + 0.3);
+                        this.g.beginPath();
+                        this.g.strokeStyle = this.previousColor;
+                        this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sa, ea, false);
+                        this.g.stroke();
+                    }
+
+                    this.g.beginPath();
+                    this.g.strokeStyle = r ? this.o.fgColor : this.fgColor;
+                    this.g.arc(this.xy, this.xy, this.radius - this.lineWidth, sat, eat, false);
+                    this.g.stroke();
+
+                    this.g.lineWidth = 2;
+                    this.g.beginPath();
+                    this.g.strokeStyle = this.o.fgColor;
+                    this.g.arc(this.xy, this.xy, this.radius - this.lineWidth + 1 + this.lineWidth * 2 / 3, 0, 2 * Math.PI, false);
+                    this.g.stroke();
+
+                    return false;
+                }
+            }
+        });
+        /* END JQUERY KNOB */
+
+        //INITIALIZE SPARKLINE CHARTS
+        $(".sparkline").each(function () {
+            var $this = $(this);
+            $this.sparkline('html', $this.data());
+        });
+
+        /* SPARKLINE DOCUMENTATION EXAMPLES http://omnipotent.net/jquery.sparkline/#s-about */
+        drawDocSparklines();
+        drawMouseSpeedDemo();
+
+    });
+    function drawDocSparklines() {
+
+        // Bar + line composite charts
+        $('#compositebar').sparkline('html', {type: 'bar', barColor: '#aaf'});
+        $('#compositebar').sparkline([4, 1, 5, 7, 9, 9, 8, 7, 6, 6, 4, 7, 8, 4, 3, 2, 2, 5, 6, 7],
+            {composite: true, fillColor: false, lineColor: 'red'});
+
+
+        // Line charts taking their values from the tag
+        $('.sparkline-1').sparkline();
+
+        // Larger line charts for the docs
+        $('.largeline').sparkline('html',
+            {type: 'line', height: '2.5em', width: '4em'});
+
+        // Customized line chart
+        $('#linecustom').sparkline('html',
+            {
+                height: '1.5em', width: '8em', lineColor: '#f00', fillColor: '#ffa',
+                minSpotColor: false, maxSpotColor: false, spotColor: '#77f', spotRadius: 3
+            });
+
+        // Bar charts using inline values
+        $('.sparkbar').sparkline('html', {type: 'bar'});
+
+        $('.barformat').sparkline([1, 3, 5, 3, 8], {
+            type: 'bar',
+            tooltipFormat: '{{value:levels}} - {{value}}',
+            tooltipValueLookups: {
+                levels: $.range_map({':2': 'Low', '3:6': 'Medium', '7:': 'High'})
+            }
+        });
+
+        // Tri-state charts using inline values
+        $('.sparktristate').sparkline('html', {type: 'tristate'});
+        $('.sparktristatecols').sparkline('html',
+            {type: 'tristate', colorMap: {'-2': '#fa7', '2': '#44f'}});
+
+        // Composite line charts, the second using values supplied via javascript
+        $('#compositeline').sparkline('html', {fillColor: false, changeRangeMin: 0, chartRangeMax: 10});
+        $('#compositeline').sparkline([4, 1, 5, 7, 9, 9, 8, 7, 6, 6, 4, 7, 8, 4, 3, 2, 2, 5, 6, 7],
+            {composite: true, fillColor: false, lineColor: 'red', changeRangeMin: 0, chartRangeMax: 10});
+
+        // Line charts with normal range marker
+        $('#normalline').sparkline('html',
+            {fillColor: false, normalRangeMin: -1, normalRangeMax: 8});
+        $('#normalExample').sparkline('html',
+            {fillColor: false, normalRangeMin: 80, normalRangeMax: 95, normalRangeColor: '#4f4'});
+
+        // Discrete charts
+        $('.discrete1').sparkline('html',
+            {type: 'discrete', lineColor: 'blue', xwidth: 18});
+        $('#discrete2').sparkline('html',
+            {type: 'discrete', lineColor: 'blue', thresholdColor: 'red', thresholdValue: 4});
+
+        // Bullet charts
+        $('.sparkbullet').sparkline('html', {type: 'bullet'});
+
+        // Pie charts
+        $('.sparkpie').sparkline('html', {type: 'pie', height: '1.0em'});
+
+        // Box plots
+        $('.sparkboxplot').sparkline('html', {type: 'box'});
+        $('.sparkboxplotraw').sparkline([1, 3, 5, 8, 10, 15, 18],
+            {type: 'box', raw: true, showOutliers: true, target: 6});
+
+        // Box plot with specific field order
+        $('.boxfieldorder').sparkline('html', {
+            type: 'box',
+            tooltipFormatFieldlist: ['med', 'lq', 'uq'],
+            tooltipFormatFieldlistKey: 'field'
+        });
+
+        // click event demo sparkline
+        $('.clickdemo').sparkline();
+        $('.clickdemo').bind('sparklineClick', function (ev) {
+            var sparkline = ev.sparklines[0],
+                region = sparkline.getCurrentRegionFields();
+            value = region.y;
+            alert("Clicked on x=" + region.x + " y=" + region.y);
+        });
+
+        // mouseover event demo sparkline
+        $('.mouseoverdemo').sparkline();
+        $('.mouseoverdemo').bind('sparklineRegionChange', function (ev) {
+            var sparkline = ev.sparklines[0],
+                region = sparkline.getCurrentRegionFields();
+            value = region.y;
+            $('.mouseoverregion').text("x=" + region.x + " y=" + region.y);
+        }).bind('mouseleave', function () {
+            $('.mouseoverregion').text('');
+        });
+    }
+
+    /**
+     ** Draw the little mouse speed animated graph
+     ** This just attaches a handler to the mousemove event to see
+     ** (roughly) how far the mouse has moved
+     ** and then updates the display a couple of times a second via
+     ** setTimeout()
+     **/
+    function drawMouseSpeedDemo() {
+        var mrefreshinterval = 500; // update display every 500ms
+        var lastmousex = -1;
+        var lastmousey = -1;
+        var lastmousetime;
+        var mousetravel = 0;
+        var mpoints = [];
+        var mpoints_max = 30;
+        $('html').mousemove(function (e) {
+            var mousex = e.pageX;
+            var mousey = e.pageY;
+            if (lastmousex > -1) {
+                mousetravel += Math.max(Math.abs(mousex - lastmousex), Math.abs(mousey - lastmousey));
+            }
+            lastmousex = mousex;
+            lastmousey = mousey;
+        });
+        var mdraw = function () {
+            var md = new Date();
+            var timenow = md.getTime();
+            if (lastmousetime && lastmousetime != timenow) {
+                var pps = Math.round(mousetravel / (timenow - lastmousetime) * 1000);
+                mpoints.push(pps);
+                if (mpoints.length > mpoints_max)
+                    mpoints.splice(0, 1);
+                mousetravel = 0;
+                $('#mousespeed').sparkline(mpoints, {width: mpoints.length * 2, tooltipSuffix: ' pixels per second'});
+            }
+            lastmousetime = timenow;
+            setTimeout(mdraw, mrefreshinterval);
+        };
+        // We could use setInterval instead, but I prefer to do it this way
+        setTimeout(mdraw, mrefreshinterval);
+    }
+</script>
+</body>
+</html>

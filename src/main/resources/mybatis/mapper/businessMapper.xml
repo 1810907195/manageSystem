@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.manage.system.mapper.IBusinessDAO">
+   	<resultMap type="com.manage.system.bean.SstSfjsYhjfxx" id="businessResultMap">
+        <id property="jylsh0" column="jylsh0"></id>
+        <result property="jylsh0" column="jylsh0"></result>
+        <result property="cardno" column="cardno"></result>
+        <result property="cardtype" column="cardtype"></result>
+        <result property="jfje00" column="jfje00"></result>
+        <result property="jylx00" column="jylx00"></result>
+        <result property="xtgzh0" column="xtgzh0"></result>
+        <result property="zdbh00" column="zdbh00"></result>
+        <result property="yyjgdm" column="yyjgdm"></result>
+        
+        <result property="jfztbz" column="jfztbz"></result>
+        <result property="yhlsh0" column="yhlsh0"></result>
+        
+        <result property="fkhdm0" column="fkhdm0"></result>
+        <result property="yhkh00" column="yhkh00"></result>
+        <result property="jyje00" column="jyje00"></result>
+        <result property="yhshh0" column="yhshh0"></result>
+        <result property="yhzdh0" column="yhzdh0"></result>
+        <result property="jyrq00" column="jyrq00"></result>
+        <result property="jysj00" column="jysj00"></result>
+        <result property="jyckh0" column="jyckh0"></result>
+        <result property="yhsqh0" column="yhsqh0"></result>
+        <result property="qsrq00" column="qsrq00"></result>
+        <result property="yhpch0" column="yhpch0"></result>
+        <result property="cgjysj" column="cgjysj"></result>
+        <result property="errmsg" column="errmsg"></result>
+        <result property="cshsj0" column="cshsj0"></result>
+   	</resultMap>
+   	
+   	<!-- 通过名字查找用户信息 -->
+    <select id="findByName" parameterType="String" resultMap="businessResultMap">
+    		SELECT
+    			*
+    		FROM
+    			SST_SFJS_YHJFXX
+    		WHERE
+    			user_name=#{user_name}
+    </select>
+    	<!-- 通过id查找用户信息 -->
+    <select id="findById" parameterType="int" resultMap="businessResultMap">
+    		SELECT
+    			*
+    		FROM
+    			con_user
+    		WHERE
+    			user_id=#{user_id}
+    </select>
+    <!-- 创建用户 -->
+   	<insert id="doCreate" parameterType="com.manage.system.bean.User">
+   		INSERT into con_user
+   		<trim prefix="(" suffix=")" suffixOverrides=",">
+   			<if test="user_name != null and user_name != ''">
+   				user_name,
+   			</if>
+   			<if test="password !=null and password != ''">
+   				password,
+   			</if>	
+   			<if test="status !=null and status != ''">
+   				status,
+   			</if>
+   			<if test="role_id !=null">
+   				role_id,
+   			</if>
+   			<if test="create_id !=null">
+   				create_id,
+   			</if>
+   			create_time,
+   			update_time
+   		</trim>
+   		<trim prefix="values (" suffix=")" suffixOverrides=",">
+   			<if test="user_name != null">
+				#{user_name},
+			</if>
+			<if test="password != null">
+				#{password},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="role_id != null">
+				#{role_id},
+			</if>
+			<if test="create_id != null">
+				#{create_id},
+			</if>
+			to_char(sysdate,'yyyy-MM-dd HH24:mi:ss'),
+			to_char(sysdate,'yyyy-MM-dd HH24:mi:ss')
+   		</trim>	
+   	</insert>
+   	<!-- 编辑用户 -->
+   	<update id="doUpdate" parameterType="com.manage.system.bean.User">
+   		update con_user
+   			<set>
+   				<trim suffixOverrides=",">
+   					<if test="status !=null">
+   						status=#{status},
+   					</if>
+   					<if test="role_id !=null">
+   						role_id=#{role_id},
+   					</if>
+   				</trim>
+   				,update_time=to_char(sysdate,'yyyy-MM-dd HH24:mi:ss')
+   			</set>
+   			<where>
+   				<if test="user_id !=null">
+   					user_id=#{user_id}
+   				</if>
+   			</where>
+   	</update>
+   	<!-- 删除单条用户 -->
+   	<delete id="removeOnePhById" parameterType="int">
+   		delete 
+   		from 
+   			con_user
+   		where 
+   			user_id=#{user_id}
+   	</delete>
+   	<!-- 分页查询 +模糊+条件-->
+   	<select id="findAllByPage" parameterType="com.manage.system.bean.Page" resultMap="businessResultMap">
+   		select * from 
+   		(
+   			select ROWNUM rn,a.*
+   			from (select * from SST_SFJS_YHJFXX t
+	   			<where>
+		   			<trim suffixOverrides="and">
+		   				<if test="queryObj != null">
+			   				<if test="queryObj.zdbh00!=null and queryObj.zdbh00 != ''">
+			   					zdbh00  like concat(concat('%',#{queryObj.zdbh00}),'%') and
+							</if>
+							<if test="queryObj.jylsh0!=null and queryObj.jylsh0 != ''"><!-- 交易流水号 -->
+								jylsh0  like concat(concat('%',#{queryObj.jylsh0}),'%') and
+							</if>
+							<if test="queryObj.jylx00!=null and queryObj.jylx00 != ''"><!-- 交易类型 -->
+								jylx00  like concat(concat('%',#{queryObj.jylx00}),'%') and
+							</if>
+							<if test="queryObj.cardno!=null and queryObj.cardno != ''">
+								cardno  like concat(concat('%',#{queryObj.cardno}),'%') and
+							</if>
+							<if test="queryObj.cardtype!=null and queryObj.cardtype != ''">
+								cardtype  like concat(concat('%',#{queryObj.cardtype}),'%') and
+							</if>
+							<if test="queryObj.xtgzh0!=null and queryObj.xtgzh0 != ''"><!-- 系统跟踪号 -->
+								xtgzh0  like concat(concat('%',#{queryObj.xtgzh0}),'%') and
+							</if>
+							<if test="queryObj.yhkh00!=null and queryObj.yhkh00 != ''"><!-- 银行卡号 -->
+								yhkh00  like concat(concat('%',#{queryObj.yhkh00}),'%') and
+							</if>
+							<if test="queryObj.yhshh0!=null and queryObj.yhshh0 != ''"><!-- 银行商户号 -->
+								yhshh0  like concat(concat('%',#{queryObj.yhshh0}),'%') and
+							</if>
+							<if test="queryObj.jfztbz!=null and queryObj.jfztbz != ''">
+								jfztbz=#{queryObj.jfztbz} and
+							</if>
+						</if>
+						<if test="endtime==null and endtime==''">
+						    <if test="starttime!=null and starttime != ''">
+						   		 to_date(t.cshsj0,'yyyy-mm-dd hh24:mi:ss') <![CDATA[>= ]]> to_date(#{starttime},'yyyy-mm-dd hh24:mi:ss') and
+							</if>
+						</if>
+						<if test="starttime==null and starttime == ''">
+						    <if test="endtime !=null and endtime !=''">
+						   		 to_date(t.cshsj0,'yyyy-mm-dd hh24:mi:ss') <![CDATA[<= ]]> to_date(#{endtime},'yyyy-mm-dd hh24:mi:ss') and
+							</if>
+						</if>
+						<if test="starttime!=null and starttime!='' and endtime!=null and endtime!=''">
+							to_date(t.cshsj0,'yyyy-mm-dd hh24:mi:ss') between to_date(#{starttime},'yyyy-mm-dd hh24:mi:ss') and to_date(#{endtime},'yyyy-mm-dd hh24:mi:ss') and
+						</if>
+					</trim>
+	   			</where>  
+	   		ORDER BY
+			jylsh0 asc) a
+   			<where>
+	   			<trim suffixOverrides="and">
+					<if test="startRow !=null">
+					ROWNUM <![CDATA[<= ]]> #{endRow} and
+					</if>
+				</trim>
+   			</where>
+   		)
+   		<where>
+	   			<trim suffixOverrides="and">
+					<if test="startRow !=null">
+					rn <![CDATA[>= ]]> #{startRow} and
+					</if>
+				</trim>
+   		</where>
+   	</select>
+   	
+   	<!-- 不分页查询 +模糊+条件-->
+   	<select id="findAllByNoPage" parameterType="com.manage.system.bean.Page" resultMap="businessResultMap">
+   		select * from SST_SFJS_YHJFXX t
+	   			<where>
+		   			<trim suffixOverrides="and">
+		   				<if test="queryObj != null">
+			   				<if test="queryObj.zdbh00!=null and queryObj.zdbh00 != ''">
+			   					zdbh00  like concat(concat('%',#{queryObj.zdbh00}),'%') and
+							</if>
+							<if test="queryObj.jylsh0!=null and queryObj.jylsh0 != ''"><!-- 交易流水号 -->
+								jylsh0  like concat(concat('%',#{queryObj.jylsh0}),'%') and
+							</if>
+							<if test="queryObj.jylx00!=null and queryObj.jylx00 != ''"><!-- 交易类型 -->
+								jylx00  like concat(concat('%',#{queryObj.jylx00}),'%') and
+							</if>
+							<if test="queryObj.cardno!=null and queryObj.cardno != ''">
+								cardno  like concat(concat('%',#{queryObj.cardno}),'%') and
+							</if>
+							<if test="queryObj.cardtype!=null and queryObj.cardtype != ''">
+								cardtype  like concat(concat('%',#{queryObj.cardtype}),'%') and
+							</if>
+							<if test="queryObj.xtgzh0!=null and queryObj.xtgzh0 != ''"><!-- 系统跟踪号 -->
+								xtgzh0  like concat(concat('%',#{queryObj.xtgzh0}),'%') and
+							</if>
+							<if test="queryObj.yhkh00!=null and queryObj.yhkh00 != ''"><!-- 银行卡号 -->
+								yhkh00  like concat(concat('%',#{queryObj.yhkh00}),'%') and
+							</if>
+							<if test="queryObj.yhshh0!=null and queryObj.yhshh0 != ''"><!-- 银行商户号 -->
+								yhshh0  like concat(concat('%',#{queryObj.yhshh0}),'%') and
+							</if>
+							<if test="queryObj.jfztbz!=null and queryObj.jfztbz != ''">
+								jfztbz=#{queryObj.jfztbz} and
+							</if>
+						</if>
+						<if test="starttime!=null and starttime != '' and endtime==null and endtime==''">
+						    to_date(t.cshsj0,'yyyy-mm-dd hh24:mi:ss') <![CDATA[>= ]]> to_date(#{starttime},'yyyy-mm-dd hh24:mi:ss') and
+						</if>
+						<if test="starttime==null and starttime=='' and endtime!='' and endtime!=null">
+						    to_date(t.cshsj0,'yyyy-mm-dd hh24:mi:ss') <![CDATA[<= ]]> to_date(#{starttime},'yyyy-mm-dd hh24:mi:ss') and
+						</if>
+						<if test="starttime!=null and starttime!='' and endtime!=null and endtime!=''">
+							to_date(t.cshsj0,'yyyy-mm-dd hh24:mi:ss') between to_date(#{starttime},'yyyy-mm-dd hh24:mi:ss') and to_date(#{endtime},'yyyy-mm-dd hh24:mi:ss') and
+						</if>
+					</trim>
+	   			</where>  
+	   		ORDER BY
+			jylsh0 asc
+   	</select>
+   	<!-- 批量删除用户 -->
+   	<delete id="deletetAll" parameterType="java.lang.String">
+   		DELETE
+	     FROM 
+	     	con_user 
+         WHERE user_name IN
+            <foreach collection="list" item="ele" open="(" close=")" separator=",">
+                ${ele}
+            </foreach>
+   	</delete>
+   	<!--  -->
+   	<select id="findTotalNum" parameterType="com.manage.system.bean.Page" resultType="int">
+   		select count(*) from SST_SFJS_YHJFXX t
+  			<where>
+	   			<trim suffixOverrides="and">
+	   				<if test="queryObj != null">
+		   				<if test="queryObj.zdbh00!=null and queryObj.zdbh00 != ''">
+		   					zdbh00  like concat(concat('%',#{queryObj.zdbh00}),'%') and
+						</if>
+						<if test="queryObj.jylsh0!=null and queryObj.jylsh0 != ''"><!-- 交易流水号 -->
+							jylsh0  like concat(concat('%',#{queryObj.jylsh0}),'%') and
+						</if>
+						<if test="queryObj.jylx00!=null and queryObj.jylx00 != ''"><!-- 交易类型 -->
+							jylx00  like concat(concat('%',#{queryObj.jylx00}),'%') and
+						</if>
+						<if test="queryObj.cardno!=null and queryObj.cardno != ''">
+							cardno  like concat(concat('%',#{queryObj.cardno}),'%') and
+						</if>
+						<if test="queryObj.cardtype!=null and queryObj.cardtype != ''">
+							cardtype  like concat(concat('%',#{queryObj.cardtype}),'%') and
+						</if>
+						<if test="queryObj.xtgzh0!=null and queryObj.xtgzh0 != ''"><!-- 系统跟踪号 -->
+							xtgzh0  like concat(concat('%',#{queryObj.xtgzh0}),'%') and
+						</if>
+						<if test="queryObj.yhkh00!=null and queryObj.yhkh00 != ''"><!-- 银行卡号 -->
+							yhkh00  like concat(concat('%',#{queryObj.yhkh00}),'%') and
+						</if>
+						<if test="queryObj.yhshh0!=null and queryObj.yhshh0 != ''"><!-- 银行商户号 -->
+							yhshh0  like concat(concat('%',#{queryObj.yhshh0}),'%') and
+						</if>
+						<if test="queryObj.jfztbz!=null and queryObj.jfztbz != ''">
+							jfztbz=#{queryObj.jfztbz} and
+						</if>
+					</if>
+					<if test="starttime!=null and starttime != '' and endtime==null and endtime==''">
+					    to_date(t.cshsj0,'yyyy-mm-dd hh24:mi:ss') <![CDATA[>= ]]> to_date(#{starttime},'yyyy-mm-dd hh24:mi:ss') and
+					</if>
+					<if test="starttime==null and starttime=='' and endtime!='' and endtime!=null">
+					    to_date(t.cshsj0,'yyyy-mm-dd hh24:mi:ss') <![CDATA[<= ]]> to_date(#{starttime},'yyyy-mm-dd hh24:mi:ss') and
+					</if>
+					<if test="starttime!=null and starttime!='' and endtime!=null and endtime!=''">
+						to_date(t.cshsj0,'yyyy-mm-dd hh24:mi:ss') between to_date(#{starttime},'yyyy-mm-dd hh24:mi:ss') and to_date(#{endtime},'yyyy-mm-dd hh24:mi:ss') and
+					</if>
+				</trim>
+   			</where>  
+   	</select>
+</mapper>
